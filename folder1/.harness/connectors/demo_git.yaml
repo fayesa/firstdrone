@@ -1,0 +1,23 @@
+connector:
+  name: demo_git
+  identifier: demo_git
+  description: ""
+  orgIdentifier: org1
+  projectIdentifier: org1_proj1
+  type: Github
+  spec:
+    url: https://github.com/fayesa
+    validationRepo: firstdrone
+    authentication:
+      type: Http
+      spec:
+        type: UsernameToken
+        spec:
+          username: fayesa
+          tokenRef: st
+    apiAccess:
+      type: Token
+      spec:
+        tokenRef: st
+    executeOnDelegate: false
+    type: Account
