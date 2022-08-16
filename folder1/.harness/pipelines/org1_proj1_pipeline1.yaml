@@ -1,0 +1,60 @@
+pipeline:
+    name: org1_proj1_pipeline1
+    identifier: org1_proj1_pipeline1
+    projectIdentifier: org1_proj1
+    orgIdentifier: org1
+    tags: {}
+    stages:
+        - stage:
+              name: demo01
+              identifier: demo01
+              description: ""
+              type: Approval
+              spec:
+                  execution:
+                      steps:
+                          - step:
+                                name: demo_approval
+                                identifier: demo_approval
+                                type: HarnessApproval
+                                timeout: 1d
+                                spec:
+                                    approvalMessage: |-
+                                        Please review the following information
+                                        and approve the pipeline progression
+                                    includePipelineExecutionHistory: true
+                                    approvers:
+                                        minimumCount: 1
+                                        disallowPipelineExecutor: false
+                                        userGroups:
+                                            - org1_ug1
+                                    approverInputs: []
+              tags: {}
+        - stage:
+              name: demo_build
+              identifier: demo_build
+              description: ""
+              type: CI
+              spec:
+                  cloneCodebase: true
+                  infrastructure:
+                      type: KubernetesHosted
+                      spec:
+                          identifier: k8s-hosted-infra
+                  execution:
+                      steps:
+                          - step:
+                                type: BuildAndPushDockerRegistry
+                                name: demo_push
+                                identifier: demo_push
+                                spec:
+                                    connectorRef: push
+                                    repo: fayesa/cronojob
+                                    tags:
+                                        - version
+    properties:
+        ci:
+            codebase:
+                connectorRef: demo_git
+                repoName: firstdrone
+                build: <+input>
