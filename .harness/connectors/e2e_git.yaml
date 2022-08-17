@@ -1,0 +1,23 @@
+connector:
+  name: e2e_git
+  identifier: e2e_git
+  description: ""
+  orgIdentifier: default
+  projectIdentifier: e2e
+  type: Github
+  spec:
+    url: https://github.com/fayesa
+    validationRepo: firstdrone
+    authentication:
+      type: Http
+      spec:
+        type: UsernameToken
+        spec:
+          username: fayesa
+          tokenRef: demost
+    apiAccess:
+      type: Token
+      spec:
+        tokenRef: demost
+    executeOnDelegate: false
+    type: Account
