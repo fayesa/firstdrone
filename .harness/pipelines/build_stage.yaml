@@ -96,6 +96,17 @@ pipeline:
                   execution:
                       steps:
                           - step:
+                                type: Policy
+                                name: e2e-policy
+                                identifier: e2epolicy
+                                spec:
+                                    policySets:
+                                        - account.demopolicy
+                                    type: Custom
+                                    policySpec:
+                                        payload: run
+                                timeout: 10m
+                          - step:
                                 name: Rollout Deployment
                                 identifier: rolloutDeployment
                                 type: K8sRollingDeploy
