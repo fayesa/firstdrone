@@ -1,0 +1,16 @@
+connector:
+  name: e2e-docker
+  identifier: e2edocker
+  description: ""
+  orgIdentifier: default
+  projectIdentifier: e2e
+  type: DockerRegistry
+  spec:
+    dockerRegistryUrl: https://index.docker.io/v2/
+    providerType: DockerHub
+    auth:
+      type: UsernamePassword
+      spec:
+        username: fayesa
+        usernameRef: null
+        passwordRef: dockere2e
