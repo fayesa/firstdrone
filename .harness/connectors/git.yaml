@@ -1,0 +1,20 @@
+connector:
+  name: git
+  identifier: git
+  orgIdentifier: default
+  projectIdentifier: e2e
+  type: Github
+  spec:
+    url: https://github.com/kubernetes/website
+    authentication:
+      type: Http
+      spec:
+        type: OAuth
+        spec:
+          tokenRef: account.harnessoauthaccesstoken_github_1660707159737
+    apiAccess:
+      type: OAuth
+      spec:
+        tokenRef: account.harnessoauthaccesstoken_github_1660707159737
+    executeOnDelegate: true
+    type: Repo
