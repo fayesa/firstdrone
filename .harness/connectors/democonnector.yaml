@@ -1,0 +1,12 @@
+connector:
+  name: demo-connector
+  identifier: democonnector
+  description: ""
+  orgIdentifier: default
+  projectIdentifier: e2e
+  type: K8sCluster
+  spec:
+    credential:
+      type: InheritFromDelegate
+    delegateSelectors:
+    - e2edemo
