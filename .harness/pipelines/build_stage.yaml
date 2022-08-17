@@ -1,0 +1,106 @@
+pipeline:
+    name: build stage
+    identifier: build_stage
+    projectIdentifier: e2e
+    orgIdentifier: default
+    tags: {}
+    properties:
+        ci:
+            codebase:
+                connectorRef: e2e_git
+                repoName: firstdrone
+                build: <+input>
+    stages:
+        - stage:
+              name: build
+              identifier: ci
+              type: CI
+              spec:
+                  cloneCodebase: true
+                  infrastructure:
+                      type: KubernetesHosted
+                      spec:
+                          identifier: k8s-hosted-infra
+                  execution:
+                      steps:
+                          - step:
+                                type: BuildAndPushDockerRegistry
+                                name: e2e_docker
+                                identifier: e2e_docker
+                                spec:
+                                    connectorRef: e2edocker
+                                    repo: fayesa/e2e
+                                    tags:
+                                        - e2e
+        - stage:
+              name: cd
+              identifier: cd
+              description: ""
+              type: Deployment
+              spec:
+                  serviceConfig:
+                      serviceRef: e2eservice
+                      serviceDefinition:
+                          spec:
+                              variables: []
+                              manifests:
+                                  - manifest:
+                                        identifier: demo-e2e
+                                        type: K8sManifest
+                                        spec:
+                                            store:
+                                                type: Github
+                                                spec:
+                                                    connectorRef: git
+                                                    gitFetchType: Branch
+                                                    paths:
+                                                        - content/en/examples/application/nginx-app.yaml
+                                                    branch: main
+                                            skipResourceVersioning: false
+                          type: Kubernetes
+                  infrastructure:
+                      environmentRef: e2eenv
+                      infrastructureDefinition:
+                          type: KubernetesDirect
+                          spec:
+                              connectorRef: democonnector
+                              namespace: harness-delegate-ng
+                              releaseName: release-<+INFRA_KEY>
+                      allowSimultaneousDeployments: false
+                  execution:
+                      steps:
+                          - step:
+                                name: Rollout Deployment
+                                identifier: rolloutDeployment
+                                type: K8sRollingDeploy
+                                timeout: 10m
+                                spec:
+                                    skipDryRun: false
+                      rollbackSteps:
+                          - step:
+                                name: Rollback Rollout Deployment
+                                identifier: rollbackRolloutDeployment
+                                type: K8sRollingRollback
+                                timeout: 10m
+                                spec: {}
+              tags: {}
+              failureStrategies:
+                  - onFailure:
+                        errors:
+                            - AllErrors
+                        action:
+                            type: StageRollback
+              variables: []
+    notificationRules:
+        - name: e2e-notify
+          identifier: e2enotify
+          pipelineEvents:
+              - type: AllEvents
+          notificationMethod:
+              type: Email
+              spec:
+                  userGroups:
+                      - account.demo_usergroup
+                  recipients:
+                      - fayesa96@gmail.com
+          enabled: true
