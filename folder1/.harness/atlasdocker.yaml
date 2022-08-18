@@ -1,0 +1,15 @@
+connector:
+  name: atlas-docker
+  identifier: atlasdocker
+  description: ""
+  orgIdentifier: org1
+  projectIdentifier: org1_proj1
+  type: DockerRegistry
+  spec:
+    dockerRegistryUrl: https://index.docker.io/v2/
+    providerType: DockerHub
+    auth:
+      type: UsernamePassword
+      spec:
+        username: fayesa
+        passwordRef: atlasst
