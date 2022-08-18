@@ -1,0 +1,48 @@
+pipeline:
+    name: atlas
+    identifier: atlas
+    projectIdentifier: org1_proj1
+    orgIdentifier: org1
+    tags: {}
+    properties:
+        ci:
+            codebase:
+                connectorRef: demoatlas
+                build: <+input>
+    stages:
+        - stage:
+              name: build
+              identifier: build
+              description: ""
+              type: CI
+              spec:
+                  cloneCodebase: true
+                  infrastructure:
+                      type: KubernetesHosted
+                      spec:
+                          identifier: k8s-hosted-infra
+                  execution:
+                      steps:
+                          - parallel:
+                                - step:
+                                      type: BuildAndPushDockerRegistry
+                                      name: client
+                                      identifier: client
+                                      spec:
+                                          connectorRef: atlasdocker
+                                          repo: fayesa/client
+                                          tags:
+                                              - client-version
+                                          dockerfile: client/Dockerfile
+                                          context: client
+                                - step:
+                                      type: BuildAndPushDockerRegistry
+                                      name: server
+                                      identifier: server
+                                      spec:
+                                          connectorRef: atlasdocker
+                                          repo: fayesa/server
+                                          tags:
+                                              - server-version
+                                          dockerfile: server/Dockerfile
+                                          context: server
