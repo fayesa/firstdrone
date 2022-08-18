@@ -1,0 +1,21 @@
+connector:
+  name: demo-atlas
+  identifier: demoatlas
+  description: ""
+  orgIdentifier: org1
+  projectIdentifier: org1_proj1
+  type: Github
+  spec:
+    url: https://github.com/mctsamiktrng/restaurant-atlas-search-gitops
+    authentication:
+      type: Http
+      spec:
+        type: OAuth
+        spec:
+          tokenRef: account.harnessoauthaccesstoken_github_1660793117622
+    apiAccess:
+      type: OAuth
+      spec:
+        tokenRef: account.harnessoauthaccesstoken_github_1660793117622
+    executeOnDelegate: false
+    type: Repo
